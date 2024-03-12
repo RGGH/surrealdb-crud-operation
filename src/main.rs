@@ -8,6 +8,12 @@ struct Division {
     population: usize,
     international_boder: bool,
 }
+#[derive(Debug, Deserialize, Serialize)]
+struct District {
+    number_of_thana: usize,
+    population: usize,
+    police_station: Vec<String>
+}
 
 #[derive(Debug,Deserialize)]
 struct Record {
@@ -24,18 +30,30 @@ async fn main() -> surrealdb::Result<()> {
     })
     .await?;
 
-    db.use_ns("bd").use_db("bd").await?;
+    db.use_ns("district").use_db("district").await?;
     
     let shatkhira: Vec<Record> = db
-        .create("khulna")
-        .content(Division {
-            name: "Shatkhira".to_string(),
-            climate: "Rough".to_string(),
-            population: 340000,
-            international_boder: true,
+        .create("District")
+        .content(District {
+                number_of_thana: 2,
+                population: 1000000,
+                police_station: vec!["mithapukur".to_string()]
         })
         .await?;
     println!("{:?}", shatkhira);
+
+    // Update all records in a table
+//    let district: Vec<Record> = db.update("khulna")
+//      .content(Division {
+//             name: "Shatkhira".to_string(),
+//             climate: "Sunny".to_string(),
+//             population: 340000,
+//             international_boder: true,
+//         })
+//      .await?;
+
+    // Delete all records in a table
+    // db.delete("khulna").await?;
 
     Ok(())
 }
