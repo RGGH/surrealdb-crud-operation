@@ -122,13 +122,13 @@ async fn main() -> surrealdb::Result<()> {
 "#;
     db.query(query).await?;
 
-    // delete record
-    // let query = r#"
-    //     DELETE FROM District
-
-    //     WHERE id="District:2v88h9zbdx9hqc9owr5i"
-    // "#;
-    // db.query(query).await?;
+    // delete COLUMN
+    let query = r#"
+        UPDATE  District
+           SET population = REMOVE 
+        WHERE id="District:x3we856001c2ibzweexz"
+    "#;
+    db.query(query).await?;
 
     // Delete all records in a table
     // db.delete("khulna").await?;
