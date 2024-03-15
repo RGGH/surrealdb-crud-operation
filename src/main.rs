@@ -18,6 +18,9 @@ struct District {
 #[derive(Debug, Deserialize)]
 struct Record {
     id: Thing,
+    number_of_thana: usize,
+    population: usize,
+    police_station: Vec<String>
 }
 
 #[tokio::main]
@@ -122,13 +125,35 @@ async fn main() -> surrealdb::Result<()> {
 "#;
     db.query(query).await?;
 
+
+    // Print every entry of the struct that select from database 
+    // to extract the every filed of struct you have to need Record struct above.
+    let entries: Vec<Record> = db.select("District").await?;
+    entries.iter().for_each(|entry| {
+        println!("{}", entry.id);
+        println!("{}", entry.number_of_thana);
+        println!("{}", entry.population);
+        println!("{:?}", entry.police_station);
+    });
+
     // delete COLUMN
-    let query = r#"
-        UPDATE  District
-           SET population = REMOVE 
-        WHERE id="District:x3we856001c2ibzweexz"
-    "#;
-    db.query(query).await?;
+    // let query = r#"
+    //     UPDATE  District
+    //        SET population = REMOVE 
+    //     WHERE id="District:x3we856001c2ibzweexz"
+    // "#;
+    // db.query(query).await?;
+
+
+    // Read records
+
+    let select : Vec<Record>= db.select("District").await?;
+    // println!("SELECT : {:?}", select);
+        for record in select.iter(){
+            // println!("record {:?}", record.id.id);
+            println!("{:?}", record.id.tb.find("number_of_thana").unwrap())
+        }
+
 
     // Delete all records in a table
     // db.delete("khulna").await?;
